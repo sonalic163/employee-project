@@ -1,0 +1,42 @@
+<div class="container mt-5">
+  <div class="card shadow">
+    <div class="card-header bg-warning text-dark">
+      <h4 class="mb-0">Delete Employee</h4>
+    </div>
+    <div class="card-body">
+      <form #empForm="ngForm" (ngSubmit)="delete()">
+        <div class="mb-3">
+          <label>Name</label>
+          <input type="text" [(ngModel)]="employees.name" name="name" class="form-control" required />
+        </div>
+        <div class="mb-3">
+          <label>Age</label>
+          <input type="number" [(ngModel)]="employees.age" name="age" class="form-control" required />
+        </div>
+        <div class="mb-3">
+          <label>Degree</label>
+          <input type="text" [(ngModel)]="employees.degree" name="degree" class="form-control" required />
+        </div>
+        <button class="btn btn-danger me-2" type="submit" [disabled]="empForm.invalid">Delete</button>
+        <a class="btn btn-secondary ms-2" routerLink="/employees">Cancel</a>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="successModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow">
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title">Success</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+          deleted created successfully!
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" data-bs-dismiss="modal">OK</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,42 @@
+<div class="container mt-5">
+  <div class="card shadow">
+    <div class="card-header bg-primary text-white">
+      <h4 class="mb-0">Create Employee</h4>
+    </div>
+    <div class="card-body">
+      <form #empForm="ngForm" (ngSubmit)="create()">
+        <div class="mb-3">
+          <label>Name</label>
+          <input type="text" name="name" [(ngModel)]="employees.name" class="form-control" required />
+        </div>
+        <div class="mb-3">
+          <label>Age</label>
+          <input type="number" name="age" [(ngModel)]="employees.age" class="form-control" required />
+        </div>
+        <div class="mb-3">
+          <label>Degree</label>
+          <input type="text" name="degree" [(ngModel)]="employees.degree" class="form-control" required />
+        </div>
+        <button class="btn btn-success" type="submit" [disabled]="empForm.invalid">Save</button>
+        <a class="btn btn-secondary ms-2" routerLink="/employees">Cancel</a>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="successModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow">
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title">Success</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+          employee created successfully!
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" data-bs-dismiss="modal">OK</button>
+      </div>
+    </div>
+  </div>
+</div>

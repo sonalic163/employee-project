@@ -1,0 +1,39 @@
+<div class="container mt-5">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0">Employee List</h2>
+    <a class="btn btn-primary" routerLink="/employees/create">
+      <i class="bi bi-plus-circle"></i> Create New
+    </a>
+  </div>
+
+  <table class="table table-striped table-hover shadow-sm">
+    <thead class="table-dark">
+      <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Age</th>
+        <th>Degree</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let emp of employees">
+        <td>{{ emp.empId }}</td>
+        <td>{{ emp.name }}</td>
+        <td>{{ emp.age }}</td>
+        <td>{{ emp.degree }}</td>
+        <td>
+          <a class="btn btn-sm btn-info me-1" [routerLink]="['/employees/details', emp.empId]">
+            Details
+          </a>
+          <a class="btn btn-sm btn-warning me-1" [routerLink]="['/employees/edit', emp.empId]">
+            Edit
+          </a>
+          <a class="btn btn-sm btn-danger" [routerLink]="['/employees/delete', emp.empId]">
+            Delete
+          </a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,23 @@
+<div class="container mt-5">
+  <div class="card shadow">
+    <div class="card-header bg-info text-white">
+      <h4 class="mb-0">Employee Details</h4>
+    </div>
+    <div class="card-body">
+      <dl class="row">
+        <dt class="col-sm-3">Employee ID</dt>
+        <dd class="col-sm-9">{{ employees.empId }}</dd>
+
+        <dt class="col-sm-3">Name</dt>
+        <dd class="col-sm-9">{{ employees.name }}</dd>
+
+        <dt class="col-sm-3">Age</dt>
+        <dd class="col-sm-9">{{ employees.age }}</dd>
+
+        <dt class="col-sm-3">Degree</dt>
+        <dd class="col-sm-9">{{ employees.degree }}</dd>
+      </dl>
+      <a class="btn btn-secondary" routerLink="/employees">Back to List</a>
+    </div>
+  </div>
+</div>
