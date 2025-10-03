@@ -3,7 +3,7 @@ pipeline {
     environment {
         IMAGE_NAME = "empweb-frontend"
         CONTAINER_NAME = "empweb-frontend-container"
-        ANGULAR_APP_DIR = "./AngularApp" // Adjust if your Angular project is in a different folder
+        ANGULAR_APP_DIR = "./employee-project" // Adjust if your Angular project is in a different folder
         PORT = "4200"
     }
     stages {
