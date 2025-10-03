@@ -1,25 +1,41 @@
 pipeline {
     agent any
+
+    environment {
+        IMAGE_NAME = "your-angular-image"
+        TAG = "latest"
+    }
+
     stages {
+        stage('Checkout') {
+            steps {
+                git url: 'https://github.com/yourusername/your-angular-repo.git', branch: 'main'
+            }
+        }
+
         stage('Install Dependencies') {
             steps {
-                sh 'docker run --rm -v /var/jenkins_home/workspace/EmpWeb_CICD/src:/app -w /app node:20 npm install'
+                sh 'docker run --rm -v $WORKSPACE/src:/app -w /app node:20 npm install'
             }
         }
+
         stage('Build Angular') {
             steps {
-                sh 'docker run --rm -v /var/jenkins_home/workspace/EmpWeb_CICD/src:/app -w /app node:20 npm run build --prod'
+                sh 'docker run --rm -v $WORKSPACE/src:/app -w /app node:20 npm run build --prod'
             }
         }
+
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t my-angular-app $WORKSPACE/src/app'
+                sh 'docker build -t your-dockerhub-username/your-angular-image:latest .'
             }
         }
+
         stage('Push Docker Image') {
             steps {
-                sh 'docker tag my-angular-app:latest <dockerhub-username>/my-angular-app:latest'
-                sh 'docker push <dockerhub-username>/my-angular-app:latest'
+                withDockerRegistry([ credentialsId: 'dockerhub-credentials', url: '' ]) {
+                    sh 'docker push your-dockerhub-username/your-angular-image:latest'
+                }
             }
         }
     }
