@@ -1,12 +1,10 @@
 pipeline {
-    agent {
-        docker { image 'node:20' }
-    }
+    agent any
     stages {
         stage('Build Angular') {
             steps {
-                sh 'npm install'
-                sh 'npm run build --prod'
+                sh 'docker run --rm -v $PWD:/app -w /app node:20 npm install'
+                sh 'docker run --rm -v $PWD:/app -w /app node:20 npm run build --prod'
             }
         }
         stage('Build Docker Image') {
@@ -16,10 +14,9 @@ pipeline {
         }
         stage('Push Docker Image') {
             steps {
-                sh 'docker tag my-angular-app:latest <your-dockerhub>/my-angular-app:latest'
-                sh 'docker push <your-dockerhub>/my-angular-app:latest'
+                sh 'docker tag my-angular-app:latest <dockerhub-username>/my-angular-app:latest'
+                sh 'docker push <dockerhub-username>/my-angular-app:latest'
             }
         }
     }
 }
-
