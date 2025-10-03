@@ -1,11 +1,20 @@
 pipeline {
     agent any
+    environment {
+        PATH = "/usr/local/bin:$PATH"  // your Node path
+    }
     stages {
         stage('Checkout') {
             steps {
                 git branch: 'main',
                     credentialsId: 'github-pat-angular',
                     url: 'https://github.com/sonalic163/employee-project.git'
+            }
+        }
+        stage('Check Node') {
+            steps {
+                sh 'node -v'
+                sh 'npm -v'
             }
         }
         stage('Install Dependencies') {
