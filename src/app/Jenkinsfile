@@ -40,9 +40,7 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh """
-                docker build -t ${IMAGE_NAME} ${ANGULAR_APP_DIR}
-                """
+               sh 'docker build -t empweb-frontend ./employee-project'
             }
         }
 
