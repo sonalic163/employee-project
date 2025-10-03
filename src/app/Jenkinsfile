@@ -1,10 +1,7 @@
 pipeline {
     agent any
     environment {
-        IMAGE_NAME = "empweb-frontend"
-        CONTAINER_NAME = "empweb-frontend-container"
-        ANGULAR_APP_DIR = "./employee-project" // Adjust if your Angular project is in a different folder
-        PORT = "4200"
+        PATH = "/usr/local/bin:$PATH"  // Node.js path
     }
     stages {
         stage('Checkout') {
@@ -14,57 +11,47 @@ pipeline {
                     url: 'https://github.com/sonalic163/employee-project.git'
             }
         }
-
-        stage('Check Node & NPM') {
+        stage('Check Node') {
             steps {
                 sh 'node -v'
                 sh 'npm -v'
             }
         }
-
         stage('Install Dependencies') {
             steps {
-                dir("${ANGULAR_APP_DIR}") {
-                    sh 'npm install'
-                }
+                sh 'npm install'
             }
         }
-
         stage('Build Angular') {
             steps {
-                dir("${ANGULAR_APP_DIR}") {
-                    sh 'npm run build --prod'
-                }
+                sh 'npm run build --prod'
             }
         }
-
         stage('Build Docker Image') {
             steps {
-               sh 'docker build -t empweb-frontend -f src/app/Dockerfile ./'
+                // Use -f to point to your Dockerfile and ./ as build context
+                sh 'docker build -t empweb-frontend -f src/app/Dockerfile ./'
             }
         }
-
         stage('Stop Existing Container') {
             steps {
+                // Stop container if already running
                 sh 'docker rm -f empweb-frontend || true'
             }
         }
-
         stage('Run Docker Container') {
             steps {
-                sh """
-                docker run -d -p ${PORT}:80 --name ${CONTAINER_NAME} ${IMAGE_NAME}
-                """
+                // Run the container
+                sh 'docker run -d -p 4200:80 --name empweb-frontend empweb-frontend'
             }
         }
     }
-
     post {
         success {
-            echo "Angular app built and container is running on port ${PORT}!"
+            echo 'Pipeline completed successfully!'
         }
         failure {
-            echo "Pipeline failed. Check logs for details."
+            echo 'Pipeline failed. Check the logs.'
         }
     }
 }
