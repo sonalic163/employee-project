@@ -1,41 +1,21 @@
 pipeline {
     agent any
-
-    environment {
-        IMAGE_NAME = "your-angular-image"
-        TAG = "latest"
-    }
-
     stages {
         stage('Checkout') {
             steps {
-                git url: 'https://github.com/yourusername/your-angular-repo.git', branch: 'main'
+                git branch: 'main',
+                    credentialsId: 'github-pat-angular',
+                    url: 'https://github.com/sonalic163/employee-project.git'
             }
         }
-
         stage('Install Dependencies') {
             steps {
-                sh 'docker run --rm -v $WORKSPACE/src:/app -w /app node:20 npm install'
+                sh 'npm install'
             }
         }
-
         stage('Build Angular') {
             steps {
-                sh 'docker run --rm -v $WORKSPACE/src:/app -w /app node:20 npm run build --prod'
-            }
-        }
-
-        stage('Build Docker Image') {
-            steps {
-                sh 'docker build -t your-dockerhub-username/your-angular-image:latest .'
-            }
-        }
-
-        stage('Push Docker Image') {
-            steps {
-                withDockerRegistry([ credentialsId: 'dockerhub-credentials', url: '' ]) {
-                    sh 'docker push your-dockerhub-username/your-angular-image:latest'
-                }
+                sh 'npm run build --prod'
             }
         }
     }
