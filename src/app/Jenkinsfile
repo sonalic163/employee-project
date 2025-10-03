@@ -1,7 +1,10 @@
 pipeline {
     agent any
     environment {
-        PATH = "/usr/local/bin:$PATH"  // your Node path
+        IMAGE_NAME = "empweb-frontend"
+        CONTAINER_NAME = "empweb-frontend-container"
+        ANGULAR_APP_DIR = "./AngularApp" // Adjust if your Angular project is in a different folder
+        PORT = "4200"
     }
     stages {
         stage('Checkout') {
@@ -11,21 +14,64 @@ pipeline {
                     url: 'https://github.com/sonalic163/employee-project.git'
             }
         }
-        stage('Check Node') {
+
+        stage('Check Node & NPM') {
             steps {
                 sh 'node -v'
                 sh 'npm -v'
             }
         }
+
         stage('Install Dependencies') {
             steps {
-                sh 'npm install'
+                dir("${ANGULAR_APP_DIR}") {
+                    sh 'npm install'
+                }
             }
         }
+
         stage('Build Angular') {
             steps {
-                sh 'npm run build --prod'
+                dir("${ANGULAR_APP_DIR}") {
+                    sh 'npm run build --prod'
+                }
             }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                sh """
+                docker build -t ${IMAGE_NAME} ${ANGULAR_APP_DIR}
+                """
+            }
+        }
+
+        stage('Stop Existing Container') {
+            steps {
+                sh """
+                if [ \$(docker ps -aq -f name=${CONTAINER_NAME}) ]; then
+                    docker stop ${CONTAINER_NAME} || true
+                    docker rm ${CONTAINER_NAME} || true
+                fi
+                """
+            }
+        }
+
+        stage('Run Docker Container') {
+            steps {
+                sh """
+                docker run -d -p ${PORT}:80 --name ${CONTAINER_NAME} ${IMAGE_NAME}
+                """
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "Angular app built and container is running on port ${PORT}!"
+        }
+        failure {
+            echo "Pipeline failed. Check logs for details."
         }
     }
 }
