@@ -3,12 +3,12 @@ pipeline {
     stages {
         stage('Install Dependencies') {
             steps {
-                sh 'docker run --rm -v $WORKSPACE/src/app:/app -w /app node:20 npm install'
+                sh 'docker run --rm -v /var/jenkins_home/workspace/EmpWeb_CICD/src:/app -w /app node:20 npm install'
             }
         }
         stage('Build Angular') {
             steps {
-                sh 'docker run --rm -v $WORKSPACE/src/app:/app -w /app node:20 npm run build --prod'
+                sh 'docker run --rm -v /var/jenkins_home/workspace/EmpWeb_CICD/src:/app -w /app node:20 npm run build --prod'
             }
         }
         stage('Build Docker Image') {
