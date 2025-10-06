@@ -8,11 +8,12 @@ COPY package*.json ./
 # Install dependencies
 RUN npm install
 
-# Copy rest of the app (Angular files)
+# Copy Angular app files
 COPY src/app ./src/app
 
 # Build Angular app for production
-RUN npm run --prefix src/app build --prod
+WORKDIR /app/src/app
+RUN npm run build --prod
 
 # ----------------- Serve Stage -----------------
 FROM nginx:alpine
