@@ -3,16 +3,15 @@ FROM node:20 AS build
 WORKDIR /app
 
 # Copy package.json and package-lock.json from repo root
-COPY package*.json ./  
+COPY package*.json ./
 
 # Install dependencies
 RUN npm install
 
-# Copy Angular app files
-COPY src/app ./src/app
+# Copy entire Angular source code
+COPY . .
 
-# Build Angular app for production
-WORKDIR /app/src/app
+# Build Angular app from workspace root
 RUN npm run build --prod
 
 # ----------------- Serve Stage -----------------
@@ -22,8 +21,8 @@ WORKDIR /usr/share/nginx/html
 # Remove default nginx static files
 RUN rm -rf ./*
 
-# Copy built Angular app from build stage
-COPY --from=build /app/src/app/dist/my-new-app .
+# Copy built Angular app
+COPY --from=build /app/dist/my-new-app .
 
 # Copy nginx config
 COPY src/app/nginx.conf /etc/nginx/conf.d/default.conf
