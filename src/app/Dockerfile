@@ -22,7 +22,7 @@ WORKDIR /usr/share/nginx/html
 RUN rm -rf ./*
 
 # Copy built Angular app
-COPY --from=build /app/dist/my-new-app .
+COPY --from=build /app/dist/my-new-app /usr/share/nginx/html
 
 # Copy nginx config
 COPY src/app/nginx.conf /etc/nginx/conf.d/default.conf
