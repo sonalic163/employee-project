@@ -1,30 +1,30 @@
-
 # ----------------- Build Stage -----------------
 FROM node:20 AS build
 WORKDIR /app
 
-# Copy package.json from parent folder (one level up)
-COPY package*.json ./
+# Copy package.json and package-lock.json from repo root
+COPY package*.json ./  
 
 # Install dependencies
 RUN npm install
 
-# Copy the entire Angular project from parent folder
-COPY . .
+# Copy rest of the app (Angular files)
+COPY src/app ./src/app
 
 # Build Angular app for production
-RUN npm run build --prod
+RUN npm run --prefix src/app build --prod
 
 # ----------------- Serve Stage -----------------
 FROM nginx:alpine
 WORKDIR /usr/share/nginx/html
+
+# Remove default nginx static files
 RUN rm -rf ./*
 
-# Copy the build output from the previous stage
-COPY --from=build /app/dist/* ./
+# Copy built Angular app from build stage
+COPY --from=build /app/src/app/dist/my-new-app .
 
-# Copy custom nginx configuration file
-COPY ./nginx.conf /etc/nginx/conf.d/default.conf
+# Copy nginx config
+COPY src/app/nginx.conf /etc/nginx/conf.d/default.conf
 
 CMD ["nginx", "-g", "daemon off;"]
-
