@@ -4,14 +4,12 @@ FROM node:20 AS build
 WORKDIR /app
 
 # Copy package.json from parent folder (one level up)
-//COPY ../package*.json ./
 COPY package*.json ./
 
 # Install dependencies
 RUN npm install
 
 # Copy the entire Angular project from parent folder
-//COPY ../ .
 COPY . .
 
 # Build Angular app for production
