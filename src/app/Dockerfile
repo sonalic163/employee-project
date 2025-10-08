@@ -2,16 +2,16 @@
 FROM node:20 AS build
 
 # Set working directory inside container
-WORKDIR /app
+WORKDIR /app/src/app
 
 # Copy package.json and package-lock.json
-COPY package*.json ./
+COPY src/app/package*.json ./
 
 # Install dependencies
 RUN npm install
 
-# Copy the rest of the Angular app code
-COPY . .
+# Copy Angular app code
+COPY src/app ./
 
 # Build Angular app for production
 RUN npm run build --prod
@@ -23,7 +23,7 @@ FROM nginx:alpine
 RUN rm -rf /usr/share/nginx/html/*
 
 # Copy built Angular app from build stage
-COPY --from=build /app/dist/my-new-app /usr/share/nginx/html
+COPY --from=build /app/src/app/dist/my-new-app /usr/share/nginx/html
 
 # Copy custom nginx configuration
 COPY src/app/nginx.conf /etc/nginx/conf.d/default.conf
