@@ -5,6 +5,6 @@ services:
     build: ./AngularApp
     container_name: empwebapi_frontend
     ports:
-      - "4200:80"
+      - "4200:4200"
     depends_on:
       - gateway   # uses the gateway from the other compose/project
